@@ -98,7 +98,11 @@ export async function getConversations() {
                     id: otherUser._id.toString(),
                     name: otherUser.name,
                     avatarUrl: otherUser.avatarUrl,
-                } : { name: "Unknown User" } // Fallback
+                } : {
+                    id: "unknown",
+                    name: "Unknown User",
+                    avatarUrl: undefined
+                } // Fallback
             };
         });
 
