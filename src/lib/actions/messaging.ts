@@ -90,7 +90,8 @@ export async function getConversations() {
         // Format for UI
         return conversations.map((c: any) => {
             const otherUser = c.participants.find((p: any) => p._id.toString() !== session.user.id);
-            return {
+            // Explicitly cast or construct the object to ensure types
+            const formattedConv = {
                 id: c._id.toString(),
                 lastMessage: c.lastMessage,
                 updatedAt: c.updatedAt,
@@ -102,8 +103,9 @@ export async function getConversations() {
                     id: "unknown",
                     name: "Unknown User",
                     avatarUrl: undefined
-                } // Fallback
+                }
             };
+            return formattedConv;
         });
 
     } catch (error) {

@@ -7,7 +7,7 @@ import { useUser } from "@/context/UserContext";
 import { cn } from "@/lib/utils";
 import { Send, UserCircle, Search, Loader2, MessageSquare } from "lucide-react";
 
-type Conversation = {
+type IConversation = {
     id: string;
     lastMessage?: { content: string; createdAt: Date };
     updatedAt: Date;
@@ -28,7 +28,7 @@ function MessagesContent() {
     const router = useRouter();
 
     // State
-    const [conversations, setConversations] = useState<Conversation[]>([]);
+    const [conversations, setConversations] = useState<IConversation[]>([]);
     const [activeConvId, setActiveConvId] = useState<string | null>(null);
     const [activeReceiverId, setActiveReceiverId] = useState<string | null>(searchParams.get("userId"));
     const [messages, setMessages] = useState<Message[]>([]);
@@ -91,7 +91,7 @@ function MessagesContent() {
         if (!silent) setIsLoadingMsgs(false);
     };
 
-    const handleSelectConversation = (conv: Conversation) => {
+    const handleSelectConversation = (conv: IConversation) => {
         setActiveConvId(conv.id);
         setActiveReceiverId(conv.otherUser.id || null);
         loadMessages(conv.id);
