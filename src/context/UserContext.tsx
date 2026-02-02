@@ -49,7 +49,9 @@ function UserContextImpl({ children }: { children: ReactNode }) {
         setActiveMode,
         isLoading: status === "loading",
         isAuthenticated: status === "authenticated",
-        logout: () => signOut({ callbackUrl: "/login" }),
+        logout: async () => {
+            await signOut({ callbackUrl: "/login", redirect: true });
+        },
     };
 
     return <UserContext.Provider value={value}>{children}</UserContext.Provider>;

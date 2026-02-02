@@ -8,6 +8,7 @@ import { useUser } from "@/context/UserContext";
 
 export function Header() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isProfileOpen, setIsProfileOpen] = useState(false);
     const { role, activeMode, setActiveMode, user, logout } = useUser();
 
     return (
@@ -64,11 +65,11 @@ export function Header() {
                             {/* We can add a red dot here later if we have unread count */}
                         </Link>
 
-                        {/* Profile with Hover Dropdown */}
-                        <div className="relative group">
-                            <Link
-                                href="/profile"
-                                className="flex items-center gap-3 pl-2 pr-1 py-1 rounded-full hover:bg-muted transition-colors border border-transparent hover:border-border"
+                        {/* Profile with Click Dropdown */}
+                        <div className="relative">
+                            <button
+                                onClick={() => setIsMobileMenuOpen((prev) => !prev ? false : false) || setIsProfileOpen(!isProfileOpen)}
+                                className="flex items-center gap-3 pl-2 pr-1 py-1 rounded-full hover:bg-muted transition-colors border border-transparent hover:border-border outline-none focus:ring-2 focus:ring-primary/20"
                             >
                                 {/* User Name */}
                                 <span className="text-sm font-medium hidden sm:block">
@@ -76,33 +77,54 @@ export function Header() {
                                 </span>
 
                                 {/* Profile Icon */}
-                                <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center border border-border overflow-hidden ring-offset-background group-hover:ring-2 ring-primary/20">
+                                <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center border border-border overflow-hidden ring-offset-background hover:ring-2 ring-primary/20">
                                     {useUser().user?.avatarUrl || useUser().user?.image ? (
                                         <img src={useUser().user?.avatarUrl || useUser().user?.image || ""} alt="Profile" className="h-full w-full object-cover" />
                                     ) : (
                                         <UserCircle className="h-5 w-5 text-muted-foreground" />
                                     )}
                                 </div>
-                            </Link>
+                            </button>
 
                             {/* Dropdown Menu */}
-                            <div className="absolute right-0 top-full mt-2 w-48 bg-card border border-border rounded-lg shadow-lg overflow-hidden hidden group-hover:block z-50 animate-in fade-in zoom-in-95 duration-200">
-                                <div className="flex flex-col py-1">
-                                    <Link href="/profile" className="px-4 py-2 text-sm hover:bg-muted text-foreground flex items-center gap-2">
-                                        <UserCircle className="h-4 w-4" /> View Profile
-                                    </Link>
-                                    <Link href="/settings" className="px-4 py-2 text-sm hover:bg-muted text-foreground flex items-center gap-2">
-                                        <SettingsIcon className="h-4 w-4" /> Settings
-                                    </Link>
-                                    <div className="h-px bg-border my-1" />
-                                    <button
-                                        onClick={() => useUser().logout()}
-                                        className="px-4 py-2 text-sm hover:bg-destructive/10 text-destructive flex items-center gap-2 w-full text-left"
-                                    >
-                                        <LogOut className="h-4 w-4" /> Log Out
-                                    </button>
-                                </div>
-                            </div>
+                            {isProfileOpen && (
+                                <>
+                                    {/* Backdrop to close on click outside */}
+                                    <div
+                                        className="fixed inset-0 z-40"
+                                        onClick={() => setIsProfileOpen(false)}
+                                    />
+
+                                    <div className="absolute right-0 top-full mt-2 w-48 bg-card border border-border rounded-lg shadow-lg overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-200">
+                                        <div className="flex flex-col py-1">
+                                            <Link
+                                                href="/profile"
+                                                className="px-4 py-2 text-sm hover:bg-muted text-foreground flex items-center gap-2"
+                                                onClick={() => setIsProfileOpen(false)}
+                                            >
+                                                <UserCircle className="h-4 w-4" /> View Profile
+                                            </Link>
+                                            <Link
+                                                href="/settings"
+                                                className="px-4 py-2 text-sm hover:bg-muted text-foreground flex items-center gap-2"
+                                                onClick={() => setIsProfileOpen(false)}
+                                            >
+                                                <SettingsIcon className="h-4 w-4" /> Settings
+                                            </Link>
+                                            <div className="h-px bg-border my-1" />
+                                            <button
+                                                onClick={() => {
+                                                    setIsProfileOpen(false);
+                                                    logout();
+                                                }}
+                                                className="px-4 py-2 text-sm hover:bg-destructive/10 text-destructive flex items-center gap-2 w-full text-left"
+                                            >
+                                                <LogOut className="h-4 w-4" /> Log Out
+                                            </button>
+                                        </div>
+                                    </div>
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>
